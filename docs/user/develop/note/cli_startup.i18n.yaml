@@ -1,0 +1,25 @@
+# Bilingual-pair consistency record for cli_startup.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write docs/user/develop/note/cli_startup.md
+/how-pnpm-dsh-web-starts:
+  en: 29066b4b21cb9cfa
+  zh: a42e1aa89c142897
+/how-pnpm-dsh-web-starts/summary:
+  en: 7e96737c03dfaa3f
+  zh: 1162924f94f307bd
+/how-pnpm-dsh-web-starts/table-of-contents:
+  en: 019e8269d776bb2d
+  zh: ce66c1544e8fc9a3
+/how-pnpm-dsh-web-starts/select-and-assemble-the-profile:
+  en: 16780f6c90803b6f
+  zh: 7d9c65a053ff1544
+/how-pnpm-dsh-web-starts/select-and-assemble-the-profile/how-the-profile-is-resolved:
+  en: a7e1bfc0695bc75d
+  zh: ff4e574e40ed4924
+/how-pnpm-dsh-web-starts/start-the-host-and-serve-the-page:
+  en: 02695ad830f70a3e
+  zh: 5cfe00137184bd3f
+/how-pnpm-dsh-web-starts/load-and-render-the-browser-application:
+  en: 261dbea4456d64a8
+  zh: 6e54ca8a4e2a71dc

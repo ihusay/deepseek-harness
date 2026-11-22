@@ -27,7 +27,8 @@ export type InjectKey = keyof {
  * Decorator for declaring service dependencies on classes or class methods.
  *
  * On classes it contributes to the plugin's static `inject` map. On methods it
- * delays the method call until the declared services are available.
+ * runs the method once per activation of a child fiber that waits for every
+ * service declared by the method's decorators.
  */
 /**
  * @param name — the required service name.
@@ -37,14 +38,28 @@ export type InjectKey = keyof {
 export function Inject<K extends InjectKey>(name: K, config?: Context[K] extends { [symbols.metadata]: infer T } ? T : never) {
   return function (value: any, decorator: ClassDecoratorContext<any> | ClassMethodDecoratorContext<any>) {
     if (decorator.kind === 'class') {
-      if (!Object.hasOwn(value, 'inject')) {
-        defineProperty(value, 'inject', Object.create(Object.getPrototypeOf(value).inject ?? null))
-        defineProperty(value.inject, symbols.checkProto, true)
-      }
-      value.inject[name] = config
+      decorator.addInitializer(function () {
+        const dependency = { [name]: { value: config, writable: true, enumerable: true, configurable: true } }
+        if (!Object.hasOwn(this, 'inject')) {
+          const inject = Object.create(Object.getPrototypeOf(this).inject ?? null, dependency)
+          defineProperty(inject, symbols.checkProto, true)
+          defineProperty(this, 'inject', inject)
+        } else {
+          const declaration = this.inject
+          const source = Array.isArray(declaration) || declaration == null ? Inject.resolve(declaration) : declaration
+          const inject = Object.create(Object.getPrototypeOf(source), {
+            ...Object.getOwnPropertyDescriptors(source),
+            ...dependency,
+          })
+          Object.defineProperty(this, 'inject', { value: inject })
+        }
+      })
     } else if (decorator.kind === 'method') {
-      const inject = (value[symbols.decorator] ??= {}).inject ??= Object.create(null)
+      const metadata = value[symbols.decorator] ??= {}
+      const needsInitializer = !metadata.inject
+      const inject = metadata.inject ??= Object.create(null)
       inject[name] = config
+      if (!needsInitializer) return
       decorator.addInitializer(function () {
         const property = this[symbols.tracker]?.property
         ;(this[symbols.initHooks] ??= []).push(() => {

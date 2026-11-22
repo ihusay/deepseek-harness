@@ -1,0 +1,19 @@
+# Bilingual-pair consistency record for context_app_boot.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write docs/user/develop/note/context_app_boot.md
+/how-boot-starts-the-host:
+  en: ca467411018fd212
+  zh: 10431df7f56d76a6
+/how-boot-starts-the-host/summary:
+  en: 456ea7774be518fa
+  zh: f00370a928629ba0
+/how-boot-starts-the-host/table-of-contents:
+  en: 118a7a6d4a42e86b
+  zh: 0638f6f4882d03eb
+/how-boot-starts-the-host/startup-order:
+  en: a884d1cfa039d295
+  zh: 0b8b2d8eec63885f
+/how-boot-starts-the-host/startup-failure-and-cleanup:
+  en: dc4ccf5a83e2367f
+  zh: c15ecde7609b20d2

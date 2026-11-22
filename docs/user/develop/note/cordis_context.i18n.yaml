@@ -1,0 +1,103 @@
+# Bilingual-pair consistency record for cordis_context.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write docs/user/develop/note/cordis_context.md
+/cordis-context-and-its-core-services:
+  en: 147b86af9fcfca7b
+  zh: 322807d1d11867e6
+/cordis-context-and-its-core-services/summary:
+  en: b86fdd4db806cbd3
+  zh: 5fd550ed225578ae
+/cordis-context-and-its-core-services/table-of-contents:
+  en: d658d0e498f412bd
+  zh: 8a7895dec4f25a82
+/cordis-context-and-its-core-services/core-objects:
+  en: 45605d1d568d8988
+  zh: 171b42df0114ddfa
+/cordis-context-and-its-core-services/core-objects/context:
+  en: 117709acde8105ab
+  zh: 1bc61b9a14e792f1
+/cordis-context-and-its-core-services/core-objects/context/core-attributes:
+  en: b93803283cbbf7d5
+  zh: 67551fbcb03cef08
+/cordis-context-and-its-core-services/core-objects/context/core-methods:
+  en: de38edadbb762a71
+  zh: 109083a278f9d8b8
+/cordis-context-and-its-core-services/plugin:
+  en: f9822af64b275684
+  zh: ec60cc910c033885
+/cordis-context-and-its-core-services/plugin/plugin-runtime:
+  en: e35a8ed5b1950965
+  zh: 5a70cc6cb6808652
+/cordis-context-and-its-core-services/plugin/plugin-inject:
+  en: 5664900d61e29cda
+  zh: f087f7e9bf1aea86
+/cordis-context-and-its-core-services/registry:
+  en: fe4106fa42f05f55
+  zh: 0402372e1a950f0d
+/cordis-context-and-its-core-services/registry/core-attributes:
+  en: b0bda4b28af48bf6
+  zh: 3c42e55c327bc4ff
+/cordis-context-and-its-core-services/registry/core-methods:
+  en: c84b7d808f6b53d5
+  zh: 9634fb27556d5a73
+/cordis-context-and-its-core-services/registry/ctx-plugin:
+  en: 9c7e92772ee4e7fd
+  zh: 4b956483e81c223f
+/cordis-context-and-its-core-services/registry/ctx-inject:
+  en: 46ea0c97e465f128
+  zh: 749a579190112337
+/cordis-context-and-its-core-services/fiber:
+  en: a9fa836355ba3d5d
+  zh: 1f7802c96364e890
+/cordis-context-and-its-core-services/fiber/core-attributes:
+  en: 9f1b6ceafc800f53
+  zh: 7235bb60c0886f8f
+/cordis-context-and-its-core-services/fiber/core-methods:
+  en: 0a13eacc7e68577b
+  zh: 91bc03d7da9b2b54
+/cordis-context-and-its-core-services/fiber/core-methods/using-effect:
+  en: a9ae20374b60e5d3
+  zh: ae34c1a831f8e5c6
+/cordis-context-and-its-core-services/fiber/lifecycle-and-cleanup:
+  en: 6c7b8222bc295078
+  zh: 28f3902b0b17529a
+/cordis-context-and-its-core-services/fiber/lifecycle-and-cleanup/stable-state-transitions:
+  en: f4bbb71c28a65e0d
+  zh: 3c0ef46e77d51a49
+/cordis-context-and-its-core-services/fiber/lifecycle-and-cleanup/construction:
+  en: 38c4bfae4de9d5c3
+  zh: b9b17e81e114e792
+/cordis-context-and-its-core-services/fiber/lifecycle-and-cleanup/dependency-resolution:
+  en: 09621c0fd97ee484
+  zh: 3a012cf3b8b1bed9
+/cordis-context-and-its-core-services/fiber/lifecycle-and-cleanup/dependency-loss:
+  en: f69d5a57de7b4804
+  zh: 80e5dd33cbf9fdf1
+/cordis-context-and-its-core-services/reflectservice:
+  en: bf356e93cbc18d16
+  zh: 92fa4307d3a635ba
+/cordis-context-and-its-core-services/reflectservice/core-attributes:
+  en: a242f787e0319895
+  zh: cfc3109e886852e5
+/cordis-context-and-its-core-services/reflectservice/core-methods:
+  en: d21f908f8847d7e2
+  zh: d5a9e4a3589f7c90
+/cordis-context-and-its-core-services/eventsservice:
+  en: ba05dda69671c3a7
+  zh: 85e67967b06c58c2
+/cordis-context-and-its-core-services/eventsservice/core-attributes:
+  en: 3250a067537c3130
+  zh: 073b97e3e3ebf8d5
+/cordis-context-and-its-core-services/eventsservice/core-methods:
+  en: 54a24d31ac9ad47f
+  zh: 2f11cd1ec8603d6f
+/cordis-context-and-its-core-services/loggerservice:
+  en: 959461033bc5ec61
+  zh: cb0f30cb3663a070
+/cordis-context-and-its-core-services/loggerservice/core-attributes:
+  en: 22eeab3902455871
+  zh: d2fccf5541bf1f47
+/cordis-context-and-its-core-services/loggerservice/core-methods:
+  en: 9baa977a35f615ca
+  zh: 88cf495afcaaa1b7

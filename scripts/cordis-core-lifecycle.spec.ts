@@ -1,6 +1,6 @@
 /** Cordis lifecycle since rc.11 (vendored Core): updates retain dependency ownership and publish only current configuration. */
 import type { Awaitable } from '@deepseek-ai/cosmokit'
-import { Context, FiberState } from '@deepseek-ai/cordis'
+import { Context, FiberState, Inject, type Fiber, type Service } from '@deepseek-ai/cordis'
 import { describe, expect, it, onTestFinished, vi } from 'vitest'
 
 declare module '@deepseek-ai/cordis' {
@@ -8,6 +8,8 @@ declare module '@deepseek-ai/cordis' {
     rc11Service: { alive: boolean }
     rc11View: string
     rc11Private: boolean
+    rc11DecoratedDependency: Service
+    rc11OtherDecoratedDependency: Service
   }
 }
 
@@ -24,6 +26,39 @@ function barrier() {
 }
 
 describe('Cordis rc.11 lifecycle', () => {
+  it('runs a decorated method once when all of its dependencies are available', async () => {
+    const ctx = root()
+    const calls: string[] = []
+
+    class Consumer {
+      constructor(readonly ctx: Context) {}
+
+      @Inject('rc11DecoratedDependency')
+      @Inject('rc11OtherDecoratedDependency')
+      stacked() {
+        calls.push('stacked')
+      }
+
+      @Inject('rc11DecoratedDependency')
+      single() {
+        calls.push('single')
+      }
+    }
+
+    const methods: Fiber[] = []
+    ctx.on('internal/plugin', (fiber) => {
+      if (fiber.parent.fiber.runtime?.callback === Consumer) methods.push(fiber)
+    })
+    ctx.provide('rc11DecoratedDependency')
+    await ctx.plugin(Consumer)
+    await Promise.all(methods.map(fiber => fiber.await()))
+    expect(calls).toEqual(['single'])
+
+    ctx.provide('rc11OtherDecoratedDependency')
+    await Promise.all(methods.map(fiber => fiber.await()))
+    expect(calls).toEqual(['single', 'stacked'])
+  })
+
   it.each([false, true])('awaits the latest update while loading (inject: %s)', async (inject) => {
     const ctx = root()
     ctx.provide('rc11Dependency', 1)

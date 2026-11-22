@@ -27,7 +27,8 @@ export type InjectKey = keyof {
  * Decorator for declaring service dependencies on classes or class methods.
  *
  * On classes it contributes to the plugin's static `inject` map. On methods it
- * delays the method call until the declared services are available.
+ * runs the method once per activation of a child fiber that waits for every
+ * service declared by the method's decorators.
  */
 /**
  * @param name — the required service name.
@@ -43,8 +44,11 @@ export function Inject<K extends InjectKey>(name: K, config?: Context[K] extends
       }
       value.inject[name] = config
     } else if (decorator.kind === 'method') {
-      const inject = (value[symbols.decorator] ??= {}).inject ??= Object.create(null)
+      const metadata = value[symbols.decorator] ??= {}
+      const needsInitializer = !metadata.inject
+      const inject = metadata.inject ??= Object.create(null)
       inject[name] = config
+      if (!needsInitializer) return
       decorator.addInitializer(function () {
         const property = this[symbols.tracker]?.property
         ;(this[symbols.initHooks] ??= []).push(() => {

@@ -62,7 +62,7 @@ The important pieces are:
 
 - `new Context()` creates the root dependency container.
 - `ctx.plugin()` starts a plugin and returns a `Fiber`.
-- `inject` tells Cordis which services must exist before the plugin runs.
+- `inject` tells Cordis which services must exist before the plugin runs. A class plugin can combine a static `inject` array with `@Inject()` decorators. Class decorators keep their additions local to the decorated class, even when several classes share the same declaration object.
 - Effects, event listeners, and services are removed when their owning fiber is
   disposed.
 

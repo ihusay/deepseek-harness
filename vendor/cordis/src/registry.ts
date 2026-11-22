@@ -37,11 +37,22 @@ export type InjectKey = keyof {
 export function Inject<K extends InjectKey>(name: K, config?: Context[K] extends { [symbols.metadata]: infer T } ? T : never) {
   return function (value: any, decorator: ClassDecoratorContext<any> | ClassMethodDecoratorContext<any>) {
     if (decorator.kind === 'class') {
-      if (!Object.hasOwn(value, 'inject')) {
-        defineProperty(value, 'inject', Object.create(Object.getPrototypeOf(value).inject ?? null))
-        defineProperty(value.inject, symbols.checkProto, true)
-      }
-      value.inject[name] = config
+      decorator.addInitializer(function () {
+        const dependency = { [name]: { value: config, writable: true, enumerable: true, configurable: true } }
+        if (!Object.hasOwn(this, 'inject')) {
+          const inject = Object.create(Object.getPrototypeOf(this).inject ?? null, dependency)
+          defineProperty(inject, symbols.checkProto, true)
+          defineProperty(this, 'inject', inject)
+        } else {
+          const declaration = this.inject
+          const source = Array.isArray(declaration) || declaration == null ? Inject.resolve(declaration) : declaration
+          const inject = Object.create(Object.getPrototypeOf(source), {
+            ...Object.getOwnPropertyDescriptors(source),
+            ...dependency,
+          })
+          Object.defineProperty(this, 'inject', { value: inject })
+        }
+      })
     } else if (decorator.kind === 'method') {
       const inject = (value[symbols.decorator] ??= {}).inject ??= Object.create(null)
       inject[name] = config

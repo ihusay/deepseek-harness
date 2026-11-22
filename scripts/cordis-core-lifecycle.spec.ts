@@ -1,6 +1,6 @@
 /** Cordis lifecycle since rc.11 (vendored Core): updates retain dependency ownership and publish only current configuration. */
 import type { Awaitable } from '@deepseek-ai/cosmokit'
-import { Context, FiberState } from '@deepseek-ai/cordis'
+import { Context, FiberState, Inject, type Service } from '@deepseek-ai/cordis'
 import { describe, expect, it, onTestFinished, vi } from 'vitest'
 
 declare module '@deepseek-ai/cordis' {
@@ -8,6 +8,7 @@ declare module '@deepseek-ai/cordis' {
     rc11Service: { alive: boolean }
     rc11View: string
     rc11Private: boolean
+    rc11DecoratedDependency: Service
   }
 }
 
@@ -24,6 +25,69 @@ function barrier() {
 }
 
 describe('Cordis rc.11 lifecycle', () => {
+  it.each([
+    ['rc11Private', 'rc11DecoratedDependency'],
+    ['rc11DecoratedDependency', 'rc11Private'],
+  ] as const)('waits for both class dependencies when %s is available first', async (first, second) => {
+    const ctx = root()
+    const start = vi.fn()
+
+    @Inject('rc11DecoratedDependency')
+    class Consumer {
+      static inject = ['rc11Private']
+
+      constructor() {
+        start()
+      }
+    }
+
+    ctx.provide(first)
+    const fiber = await ctx.plugin(Consumer)
+    expect(fiber.state).toBe(FiberState.PENDING)
+    expect(start).not.toHaveBeenCalled()
+
+    ctx.provide(second)
+    await fiber.await()
+    expect(fiber.state).toBe(FiberState.ACTIVE)
+    expect(start).toHaveBeenCalledOnce()
+  })
+
+  it('keeps decorators local to a class that shares its static inject object', async () => {
+    const ctx = root()
+    const sharedInject = { rc11Private: null }
+    const started: string[] = []
+
+    @Inject('rc11DecoratedDependency')
+    class DecoratedConsumer {
+      static inject = sharedInject
+
+      constructor() {
+        started.push('decorated')
+      }
+    }
+
+    class OtherConsumer {
+      static inject = sharedInject
+
+      constructor() {
+        started.push('other')
+      }
+    }
+
+    ctx.provide('rc11Private', true)
+    const decorated = await ctx.plugin(DecoratedConsumer)
+    const other = await ctx.plugin(OtherConsumer)
+    expect(Object.keys(sharedInject)).toEqual(['rc11Private'])
+    expect(decorated.state).toBe(FiberState.PENDING)
+    expect(other.state).toBe(FiberState.ACTIVE)
+    expect(started).toEqual(['other'])
+
+    ctx.provide('rc11DecoratedDependency')
+    await decorated.await()
+    expect(decorated.state).toBe(FiberState.ACTIVE)
+    expect(started).toEqual(['other', 'decorated'])
+  })
+
   it.each([false, true])('awaits the latest update while loading (inject: %s)', async (inject) => {
     const ctx = root()
     ctx.provide('rc11Dependency', 1)
